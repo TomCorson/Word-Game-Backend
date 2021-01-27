@@ -23,4 +23,10 @@ public class MadLibService {
         log.info("Create MadLib called from service");
         return new ResponseEntity<>(madLibRepo.findById(id), HttpStatus.OK);
     }
+
+    public Boolean deleteMadLib(Long id) {
+        log.info("delete called from service");
+        madLibRepo.deleteById(id);
+        return true;
+    }
 }

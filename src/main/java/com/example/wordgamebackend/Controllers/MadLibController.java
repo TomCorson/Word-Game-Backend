@@ -25,5 +25,10 @@ public class MadLibController {
         madLibService.createMadLib(madLib);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
+    @DeleteMapping("/{id}")
+    public Boolean deleteMadLib(@PathVariable Long id){
+        log.info("delete called from controller");
+        return madLibService.deleteMadLib(id);
+    }
 
 }
