@@ -16,7 +16,12 @@ public class MadLibController {
     @GetMapping("/{id}")
     public ResponseEntity<?> getMadLib(@PathVariable Long id){
         log.info("Get MadLib by id called in controller");
-        return madLibService.getMadLib(id);
+        return new ResponseEntity<>(madLibService.getMadLib(id),HttpStatus.OK);
+    }
+    @GetMapping
+    public ResponseEntity<?> getAllMadLib(){
+        log.info("Get all called in controller");
+        return new ResponseEntity<>(madLibService.getAllMadLib(), HttpStatus.OK);
     }
 
     @PostMapping

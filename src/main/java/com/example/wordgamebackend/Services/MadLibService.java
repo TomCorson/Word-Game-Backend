@@ -4,9 +4,10 @@ import com.example.wordgamebackend.Entities.MadLib;
 import com.example.wordgamebackend.Repos.MadLibRepo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -19,14 +20,19 @@ public class MadLibService {
         madLibRepo.save(madLib);
     }
 
-    public ResponseEntity<?> getMadLib(Long id) {
+    public Optional<MadLib> getMadLib(Long id) {
         log.info("Create MadLib called from service");
-        return new ResponseEntity<>(madLibRepo.findById(id), HttpStatus.OK);
+        return madLibRepo.findById(id);
     }
 
     public Boolean deleteMadLib(Long id) {
         log.info("delete called from service");
         madLibRepo.deleteById(id);
         return true;
+    }
+
+    public List<MadLib> getAllMadLib() {
+        log.info("Get all called from Service");
+        return madLibRepo.findAll();
     }
 }
