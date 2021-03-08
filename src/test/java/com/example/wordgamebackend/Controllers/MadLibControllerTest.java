@@ -4,9 +4,11 @@ import com.example.wordgamebackend.Entities.MadLib;
 import com.example.wordgamebackend.Repos.MadLibRepo;
 import com.example.wordgamebackend.Services.MadLibService;
 import com.example.wordgamebackend.WordGameBackendApplication;
+import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -16,18 +18,20 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.util.NestedServletException;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = WordGameBackendApplication.class)
 @WebAppConfiguration
+@AutoConfigureMockMvc
 public class MadLibControllerTest {
 
     public static final long MADLIB_1_ID = 1l;
@@ -47,6 +51,8 @@ public class MadLibControllerTest {
 
     private MockMvc mockMvc;
     private HttpMessageConverter mappingJackson2HttpMessageConverter;
+    @Autowired
+    private MadLibController madLibController;
     @Autowired
     private WebApplicationContext webApplicationContext;
     @Autowired
@@ -82,13 +88,21 @@ public class MadLibControllerTest {
     }
     @org.junit.Test(expected = NestedServletException.class)
     public void getNonExistentMadLib() throws Exception {
-        mockMvc.perform(getMadLib("/222"))
+        this.mockMvc.perform(get("/222"))
                 .andExpect(status().isNotFound())
                 .andExpect(content().contentType(CONTENT_TYPE));
     }
 
     @org.junit.Test
-    public void getMadLib() {
+    public void getMadLib() throws Exception {
+        this.mockMvc.perform(get("/1"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(CONTENT_TYPE))
+                .andExpect(jsonPath("$.id", Matchers.is(MADLIB_1_ID)))
+                .andExpect(jsonPath("$.name", Matchers.is(MADLIB_1_NAME)))
+                .andExpect(jsonPath("$.story", Matchers.is(MADLIB_1_STORY)))
+                .andExpect(jsonPath("$.partsOfSpeech", Matchers.is(MADLIB_1_PARTSOFSPEECH)));
     }
 
     @org.junit.Test
