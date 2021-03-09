@@ -5,6 +5,7 @@ import com.example.wordgamebackend.Repos.MadLibRepo;
 import com.example.wordgamebackend.Services.MadLibService;
 import com.example.wordgamebackend.WordGameBackendApplication;
 import org.hamcrest.Matchers;
+import org.hibernate.tool.schema.internal.exec.ScriptTargetOutputToFile;
 import org.junit.Assert;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.util.NestedServletException;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -27,6 +29,7 @@ import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
+
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = WordGameBackendApplication.class)
@@ -75,16 +78,19 @@ public class MadLibControllerTest {
         MadLib madLib1 = new MadLib(MADLIB_1_ID, MADLIB_1_NAME, MADLIB_1_STORY, MADLIB_1_PARTSOFSPEECH);
         MadLib madLib2 = new MadLib(MADLIB_2_ID, MADLIB_2_NAME, MADLIB_2_STORY, MADLIB_2_PARTSOFSPEECH);
         MadLib madLib3 = new MadLib(MADLIB_3_ID, MADLIB_3_NAME, MADLIB_3_STORY, MADLIB_3_PARTSOFSPEECH);
+        System.out.printf("ABOUT TO SAVE THE MADLIBS: %S AND %S AND %S", madLib1.toString(),madLib2.toString(),madLib3
+        .toString());
         madLibRepo.save(madLib1);
         madLibRepo.save(madLib2);
         madLibRepo.save(madLib3);
+        System.out.println("DONE WITH THE SET UP and saved!!!!!!");
     }
 
     @org.junit.After
     public void tearDown() throws Exception {
-        madLibRepo.deleteById(1l);
-        madLibRepo.deleteById(2l);
-        madLibRepo.deleteById(3l);
+        madLibRepo.deleteById(1L);
+        madLibRepo.deleteById(2L);
+        madLibRepo.deleteById(3L);
     }
     @org.junit.Test(expected = NestedServletException.class)
     public void getNonExistentMadLib() throws Exception {
@@ -99,7 +105,6 @@ public class MadLibControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(CONTENT_TYPE))
-                .andExpect(jsonPath("$.id", Matchers.is(MADLIB_1_ID)))
                 .andExpect(jsonPath("$.name", Matchers.is(MADLIB_1_NAME)))
                 .andExpect(jsonPath("$.story", Matchers.is(MADLIB_1_STORY)))
                 .andExpect(jsonPath("$.partsOfSpeech", Matchers.is(MADLIB_1_PARTSOFSPEECH)));

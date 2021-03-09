@@ -21,7 +21,7 @@ public class MadLibService {
     }
 
     public Optional<MadLib> getMadLib(Long id) {
-        log.info("Create MadLib called from service");
+        log.info("Get MadLib by id called from service");
         return madLibRepo.findById(id);
     }
 
