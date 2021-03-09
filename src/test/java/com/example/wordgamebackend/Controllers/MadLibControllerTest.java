@@ -5,7 +5,6 @@ import com.example.wordgamebackend.Repos.MadLibRepo;
 import com.example.wordgamebackend.Services.MadLibService;
 import com.example.wordgamebackend.WordGameBackendApplication;
 import org.hamcrest.Matchers;
-import org.hibernate.tool.schema.internal.exec.ScriptTargetOutputToFile;
 import org.junit.Assert;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,15 +16,11 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
-
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.util.NestedServletException;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-
 import java.util.Arrays;
 import java.util.List;
-
-import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
@@ -37,9 +32,9 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 @AutoConfigureMockMvc
 public class MadLibControllerTest {
 
-    public static final long MADLIB_1_ID = 1l;
-    public static final long MADLIB_2_ID = 2l;
-    public static final long MADLIB_3_ID = 3l;
+    public static final long MADLIB_1_ID = 1L;
+    public static final long MADLIB_2_ID = 2L;
+    public static final long MADLIB_3_ID = 3L;
     public static final String MADLIB_1_NAME = "One Name";
     public static final String MADLIB_2_NAME = "Two Name";
     public static final String MADLIB_3_NAME = "Three Name";
