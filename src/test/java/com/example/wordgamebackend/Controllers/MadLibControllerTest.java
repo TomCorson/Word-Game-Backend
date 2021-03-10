@@ -70,6 +70,7 @@ public class MadLibControllerTest {
     @org.junit.Before
     public void setUp() throws Exception {
         mockMvc = webAppContextSetup(webApplicationContext).build();
+        madLibRepo.deleteAll();
         MadLib madLib1 = new MadLib(MADLIB_1_ID, MADLIB_1_NAME, MADLIB_1_STORY, MADLIB_1_PARTSOFSPEECH);
         MadLib madLib2 = new MadLib(MADLIB_2_ID, MADLIB_2_NAME, MADLIB_2_STORY, MADLIB_2_PARTSOFSPEECH);
         MadLib madLib3 = new MadLib(MADLIB_3_ID, MADLIB_3_NAME, MADLIB_3_STORY, MADLIB_3_PARTSOFSPEECH);
@@ -79,6 +80,7 @@ public class MadLibControllerTest {
         madLibRepo.save(madLib2);
         madLibRepo.save(madLib3);
         System.out.println("DONE WITH THE SET UP and saved!!!!!!");
+
     }
 
     @org.junit.After
@@ -96,7 +98,7 @@ public class MadLibControllerTest {
 
     @org.junit.Test
     public void getMadLib() throws Exception {
-        this.mockMvc.perform(get("/1"))
+        this.mockMvc.perform(get("/70"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(CONTENT_TYPE))
