@@ -11,13 +11,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.util.NestedServletException;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import java.util.Arrays;
 import java.util.List;
@@ -67,28 +75,28 @@ public class MadLibControllerTest {
         Assert.assertNotNull("the JSON message converter must not be null", this.mappingJackson2HttpMessageConverter);
     }
 
-    @org.junit.Before
-    public void setUp() throws Exception {
-        mockMvc = webAppContextSetup(webApplicationContext).build();
-        madLibRepo.deleteAll();
-        MadLib madLib1 = new MadLib(MADLIB_1_ID, MADLIB_1_NAME, MADLIB_1_STORY, MADLIB_1_PARTSOFSPEECH);
-        MadLib madLib2 = new MadLib(MADLIB_2_ID, MADLIB_2_NAME, MADLIB_2_STORY, MADLIB_2_PARTSOFSPEECH);
-        MadLib madLib3 = new MadLib(MADLIB_3_ID, MADLIB_3_NAME, MADLIB_3_STORY, MADLIB_3_PARTSOFSPEECH);
-        System.out.printf("ABOUT TO SAVE THE MADLIBS: %S AND %S AND %S", madLib1.toString(),madLib2.toString(),madLib3
-        .toString());
-        madLibRepo.save(madLib1);
-        madLibRepo.save(madLib2);
-        madLibRepo.save(madLib3);
-        System.out.println("DONE WITH THE SET UP and saved!!!!!!");
-
-    }
-
-    @org.junit.After
-    public void tearDown() throws Exception {
-        madLibRepo.deleteById(1L);
-        madLibRepo.deleteById(2L);
-        madLibRepo.deleteById(3L);
-    }
+//    @org.junit.Before
+//    public void setUp() throws Exception {
+//        mockMvc = webAppContextSetup(webApplicationContext).build();
+//        madLibRepo.deleteAll();
+//        MadLib madLib1 = new MadLib(MADLIB_1_ID, MADLIB_1_NAME, MADLIB_1_STORY, MADLIB_1_PARTSOFSPEECH);
+//        MadLib madLib2 = new MadLib(MADLIB_2_ID, MADLIB_2_NAME, MADLIB_2_STORY, MADLIB_2_PARTSOFSPEECH);
+//        MadLib madLib3 = new MadLib(MADLIB_3_ID, MADLIB_3_NAME, MADLIB_3_STORY, MADLIB_3_PARTSOFSPEECH);
+//        System.out.printf("ABOUT TO SAVE THE MADLIBS: %S AND %S AND %S", madLib1.toString(),madLib2.toString(),madLib3
+//        .toString());
+//        madLibRepo.save(madLib1);
+//        madLibRepo.save(madLib2);
+//        madLibRepo.save(madLib3);
+//        System.out.println("DONE WITH THE SET UP and saved!!!!!!");
+//
+//    }
+//
+//    @org.junit.After
+//    public void tearDown() throws Exception {
+//        madLibRepo.deleteById(1L);
+//        madLibRepo.deleteById(2L);
+//        madLibRepo.deleteById(3L);
+//    }
     @org.junit.Test(expected = NestedServletException.class)
     public void getNonExistentMadLib() throws Exception {
         this.mockMvc.perform(get("/222"))
@@ -108,7 +116,14 @@ public class MadLibControllerTest {
     }
 
     @org.junit.Test
-    public void getAllMadLib() {
+    public void addMadLib() {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
+        when(madLibRepo.save(any(MadLib.class)));
+        MadLib madLib1 = new MadLib(MADLIB_1_ID, MADLIB_1_NAME, MADLIB_1_STORY, MADLIB_1_PARTSOFSPEECH);
+        ResponseEntity<?> responseEntity = madLibController.createMadLib(madLib1);
+        assertThat(responseEntity.getStatusCode().is2xxSuccessful());
+
     }
 
     @org.junit.Test
