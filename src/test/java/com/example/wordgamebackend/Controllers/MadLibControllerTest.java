@@ -119,9 +119,11 @@ public class MadLibControllerTest {
     public void addMadLib() {
         MockHttpServletRequest request = new MockHttpServletRequest();
         RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
-        when(madLibRepo.save(any(MadLib.class)));
+
         MadLib madLib1 = new MadLib(MADLIB_1_ID, MADLIB_1_NAME, MADLIB_1_STORY, MADLIB_1_PARTSOFSPEECH);
+        when(madLibRepo.save(any(MadLib.class))).thenReturn(madLib1);
         ResponseEntity<?> responseEntity = madLibController.createMadLib(madLib1);
+        System.out.println("Did we get here");
         assertThat(responseEntity.getStatusCode().is2xxSuccessful());
 
     }
