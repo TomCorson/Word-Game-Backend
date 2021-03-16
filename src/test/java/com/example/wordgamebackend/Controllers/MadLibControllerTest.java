@@ -127,12 +127,4 @@ public class MadLibControllerTest {
         assertThat(responseEntity.getStatusCode().is2xxSuccessful());
 
     }
-
-    @org.junit.Test
-    public void createMadLib() {
-    }
-
-    @org.junit.Test
-    public void deleteMadLib() {
-    }
 }
